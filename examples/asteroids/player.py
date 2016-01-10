@@ -47,7 +47,8 @@ class Player(VisibleGameObject):
 
     def can_move(self, screen):
         width, _ = screen.get_size()
-        return (0 <= (self._position + self._direction).x <= width
+        return (0 <= (self._position + self._direction).x <=
+                width - self.rect.width
                 and not self._is_destroyed)
 
     def move_left(self):

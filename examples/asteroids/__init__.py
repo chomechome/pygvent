@@ -82,13 +82,12 @@ class AsteroidsGame(Game):
         menu.add_button(exit_button)
 
     def create_button(self, menu, offset, button_name):
-        directory = 'D:\\'
-        idle = self.engine.image('{}{}_button_idle.png'.format(directory,
-                                                               button_name))
+        idle = self.engine.image(
+            'resource/{}_button_idle.png'.format(button_name))
         select = self.engine.image(
-            '{}{}_button_select.png'.format(directory, button_name))
+            'resource/{}_button_select.png'.format(button_name))
         press = self.engine.image(
-            '{}{}_button_press.png'.format(directory, button_name))
+            'resource/{}_button_press.png'.format(button_name))
         button_images = Button.Images(idle, select, press, idle)
         return Button(menu.position + offset, button_images)
 

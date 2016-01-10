@@ -17,8 +17,8 @@ class Event(object):
         self._handlers.append(handler)
         return self
 
-    def extend(self, iterable):
-        self._handlers.extend(iterable)
+    def extend(self, handlers):
+        self._handlers.extend(handlers)
 
     def __isub__(self, handler):
         return self.remove(handler)
@@ -28,12 +28,16 @@ class Event(object):
         self._handlers = [x for x in self._handlers if x != handler]
         return self
 
+    def remove_many(self, handlers):
+        for handler in handlers:
+            self.remove(handler)
+
     def __call__(self, *args, **kwargs):
         for handler in self._handlers:
             handler(*args, **kwargs)
 
     def clear(self):
-        self._handlers = []
+        self._handlers.clear()
 
 
 class Handler(functools.partial):

@@ -1,6 +1,6 @@
-import operator
 import math
-from utils import is_subscriptable
+import operator
+from pygvent.utils import is_subscriptable
 
 
 class VectorIndexError(IndexError):

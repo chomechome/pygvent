@@ -7,8 +7,8 @@ class Key(int):
     def __new__(cls, key_id):
         key = super(Key, cls).__new__(cls, key_id)
         key.on_down = Event()
-        key.on_pressed = Event()
-        key.on_released = Event()
+        key.on_press = Event()
+        key.on_release = Event()
         return key
 
 
@@ -23,6 +23,10 @@ class KeyboardState(list):
 
     @lazy
     def keys(self):
+        """
+
+        :rtype: list[Key]
+        """
         return [Key(key_id) for key_id in range(len(self))]
 
     @abstractmethod
@@ -37,7 +41,7 @@ class KeyboardState(list):
         Create an empty state instance, then initialize it with current state
         :rtype: KeyboardState
         """
-        copy = super(KeyboardState, self).__new__(KeyboardState)
+        copy = super(KeyboardState, self).__new__(type(self))
         super(KeyboardState, copy).__init__(self)
         return copy
 
@@ -94,6 +98,6 @@ class Keyboard(object):
             if self.is_down(key):
                 key.on_down()
             if self.is_pressed(key):
-                key.on_pressed()
+                key.on_press()
             if self.is_released(key):
-                key.on_released()
+                key.on_release()

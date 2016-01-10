@@ -2,7 +2,6 @@
 import logging
 from functools import partial
 from random import random
-
 from pygvent.display import Resolution
 from pygvent.game import Game
 from pygvent.controls import Button, TopDownMenu
@@ -52,11 +51,9 @@ class AsteroidsGame(Game):
                     self.stop()
 
     def clear_input_bindings(self):
-        self.keyboard.keys.K_UP.on_pressed.clear()
-        self.keyboard.keys.K_UP.on_released.clear()
-        self.keyboard.keys.K_DOWN.on_pressed.clear()
-        self.keyboard.keys.K_DOWN.on_released.clear()
-        self.keyboard.keys.K_SPACE.on_pressed.clear()
+        self.keyboard.keys.K_UP.on_press.clear()
+        self.keyboard.keys.K_DOWN.on_press.clear()
+        self.keyboard.keys.K_SPACE.on_press.clear()
 
     def load_main_menu(self, scene):
         menu_layer = Layer('MainMenu')
@@ -66,9 +63,9 @@ class AsteroidsGame(Game):
                             self.resolution.height // 2 - 45))
         menu.add_to_layer(menu_layer)
 
-        self.keyboard.keys.K_UP.on_pressed += menu.move_up
-        self.keyboard.keys.K_DOWN.on_pressed += menu.move_down
-        self.keyboard.keys.K_SPACE.on_pressed += menu.select
+        self.keyboard.keys.K_UP.on_press += menu.move_up
+        self.keyboard.keys.K_DOWN.on_press += menu.move_down
+        self.keyboard.keys.K_SPACE.on_press += menu.select
 
         menu.on_kill += self.clear_input_bindings
 
@@ -92,21 +89,17 @@ class AsteroidsGame(Game):
         return Button(menu.position + offset, button_images)
 
     def load_game_level(self, scene):
-        level_layer = Layer('LevelOne')
-        scene.add(level_layer)
+        player_layer = Layer('Player')
+        scene.add(player_layer)
 
-        self.asteroid_possibility = self.BASE_ASTEROID_POSSIBILITY
-        self.max_asteroids = self.BASE_MAX_ASTEROIDS
-
-        score = self.create_score(level_layer)
-
-        player = self.create_player(level_layer)
+        player = self.create_player(player_layer)
 
         projectile_image = self.engine.image('resource/projectile.png')
 
         projectiles = Layer('Projectiles')
         scene.add(projectiles)
-        self.keyboard.keys.K_SPACE.on_pressed += partial(
+
+        self.keyboard.keys.K_SPACE.on_press += partial(
             player.shoot, projectiles, projectile_image)
 
         asteroid_images = Asteroid.Images(
@@ -117,10 +110,13 @@ class AsteroidsGame(Game):
         asteroids = Layer('Asteroids')
         scene.add(asteroids)
 
-        self.clock.on_tick.extend(
-            [partial(self.create_random_asteroid, asteroids, asteroid_images),
-             partial(self.handle_intersections, player, score, scene)]
-        )
+        self.asteroid_possibility = self.BASE_ASTEROID_POSSIBILITY
+        self.max_asteroids = self.BASE_MAX_ASTEROIDS
+
+        score_layer = Layer('Score')
+        scene.add(score_layer)
+
+        score = self.create_score(score_layer)
 
         player.on_kill.extend(
             [partial(self.clock.on_tick.remove, self.create_random_asteroid),
@@ -131,9 +127,14 @@ class AsteroidsGame(Game):
              partial(self.load_main_menu, scene)]
         )
 
+        self.clock.on_tick.extend(
+            [partial(self.create_random_asteroid, asteroids, asteroid_images),
+             partial(self.handle_intersections, player, score, scene)]
+        )
+
     def create_score(self, layer):
-        font_size = 32
-        font = self.engine.font.Font(None, font_size)
+        font_size = 24
+        font = self.engine.font.Font('resource/arial.ttf', font_size)
         color = self.engine.color.Color('white')
         message = 'Asteroids killed'
         score = Score(font, color, message, (20, 20))

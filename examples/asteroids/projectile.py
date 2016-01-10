@@ -1,6 +1,6 @@
 # coding=utf-8
 from pygvent.objects import VisibleGameObject
-from utils.image import convert_to_mask
+from pygvent.utils.image import convert_to_mask
 
 
 class Projectile(VisibleGameObject):

@@ -1,9 +1,10 @@
 # coding=utf-8
 from collections import namedtuple
-from pygvent.objects import VisibleGameObject
-from pygvent.vector2d import Vector2D
+
 from examples.asteroids.projectile import Projectile
-from utils.image import convert_to_mask
+from pygvent.objects import VisibleGameObject
+from pygvent.utils.image import convert_to_mask
+from pygvent.vector2d import Vector2D
 
 
 class Player(VisibleGameObject):

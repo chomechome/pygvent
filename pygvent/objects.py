@@ -10,7 +10,7 @@ class GameObject(object):
     def __init__(self, layers=None, is_enabled=True):
         """
 
-        :type layers: list[pygvent.structures.Layer]
+        :type layers: collections.Iterable[pygvent.structures.Layer]
         :type is_enabled: bool
         """
         self.on_kill = Event()

@@ -14,6 +14,11 @@ class Event(object):
         return self.add(handler)
 
     def add(self, handler):
+        """
+
+        :type handler: collections.Callable
+        :rtype: Event
+        """
         self._handlers.append(handler)
         return self
 
@@ -24,6 +29,11 @@ class Event(object):
         return self.remove(handler)
 
     def remove(self, handler):
+        """
+
+        :type handler: collections.Callable
+        :rtype: Event
+        """
         handler = Handler.convert(handler)
         self._handlers = [x for x in self._handlers if x != handler]
         return self

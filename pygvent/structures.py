@@ -77,12 +77,12 @@ class Scene(object):
 
         :type layers: collections.Iterable[Layer]
         """
-        self._layers_dictionary = OrderedDict()
+        self._layers = OrderedDict()
 
         self.extend(layers or [])
 
     def __len__(self):
-        return len(self._layers_dictionary)
+        return len(self._layers)
 
     def __contains__(self, item):
         return item in self.layers
@@ -101,28 +101,28 @@ class Scene(object):
         :type item: str
         :rtype: collections.Iterable[pygvent.objects.GameObject]
         """
-        return self._layers_dictionary.get(item, [])
+        return self._layers.get(item, [])
 
     def __getattr__(self, item):
-        if item in self._layers_dictionary:
+        if item in self._layers:
             return self[item]
         message = "'{}' object has no attribute '{}'".format(type(self), item)
         raise AttributeError(message)
 
     @property
     def layers(self):
-        return list(self._layers_dictionary.values())
+        return list(self._layers.values())
 
     @property
     def layer_names(self):
-        return list(self._layers_dictionary.keys())
+        return list(self._layers.keys())
 
     @property
     def object_count(self):
         return sum(map(len, self))
 
     def add(self, layer):
-        self._layers_dictionary[layer.name] = layer
+        self._layers[layer.name] = layer
 
     def remove(self, layer):
         """
@@ -130,9 +130,9 @@ class Scene(object):
         :type layer: str|Layer
         """
         if isinstance(layer, str):
-            self._layers_dictionary.pop(layer)
+            self._layers.pop(layer)
         else:
-            self._layers_dictionary.pop(layer.name)
+            self._layers.pop(layer.name)
 
     def extend(self, layers):
         for layer in layers:
@@ -141,7 +141,7 @@ class Scene(object):
     def clear(self):
         for layer in self:
             layer.clear()
-        self._layers_dictionary.clear()
+        self._layers.clear()
 
     def update(self):
         for layer in self:

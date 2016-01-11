@@ -17,7 +17,7 @@ class Button(VisibleGameObject):
     def __init__(self, position, images, state=State.IDLE, **kwargs):
         """
 
-        :type images: core.controls.Button.Images
+        :type images: Button.Images
         :type state: str
         """
         super(Button, self).__init__(position, **kwargs)

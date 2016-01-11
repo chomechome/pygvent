@@ -136,7 +136,7 @@ class Vector2D(object):
         """
         Handles any two-operator function where the left operand is a Vector2D
         :type other: Vector2D|list|tuple|int|float
-        :param callable function: Function to implement
+        :type function: collections.Callable
         :rtype: Vector2D
         """
         if self._is_valid_subscriptable(other):
@@ -148,7 +148,7 @@ class Vector2D(object):
         """
         Handles any two-operator function where the right operand is a Vector2D
         :type other: Vector2D|list|tuple|int|float
-        :param callable function: Function to implement
+        :type function: collections.Callable
         :rtype: Vector2D
         """
         if self._is_valid_subscriptable(other):
@@ -160,7 +160,7 @@ class Vector2D(object):
         """
         Handles any two-operator function inplace
         :type other: Vector2D|list|tuple|int|float
-        :param callable function: Function to implement
+        :type function: collections.Callable
         :rtype: Vector2D
         """
         if self._is_valid_subscriptable(other):
@@ -295,7 +295,7 @@ class Vector2D(object):
         return math.sqrt(self.get_squared_distance(other))
 
     def project(self, other):
-        other_squared_length = other[0] * other[0] + other[1] * other[1]
+        other_squared_length = other[0] ** 2 + other[1] ** 2
         projected_length = self.dot(other)
         return other * (projected_length / other_squared_length)
 

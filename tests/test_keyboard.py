@@ -5,14 +5,14 @@ from pygvent.keyboard import Keyboard, KeyboardState
 class KeyboardTest(TestCase):
     def setUp(self):
         self.test_state = [False for _ in range(6)]
-        self.keyboard = Keyboard(self.get_test_state(self.test_state))
+        self.keyboard = Keyboard(self.get_mock_state(self.test_state))
 
-    def get_test_state(self, iterable):
-        class TestKeyboardState(KeyboardState):
+    def get_mock_state(self, iterable):
+        class MockKeyboardState(KeyboardState):
             def get_new_state(self):
                 return iterable
 
-        return TestKeyboardState()
+        return MockKeyboardState()
 
     def test_is_down(self):
         key_id = 1

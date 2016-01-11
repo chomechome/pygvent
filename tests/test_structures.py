@@ -58,8 +58,12 @@ class LayerTest(TestCaseWithPatch):
 
         new_layer = Layer(self.test_layer.name)
         new_layer.extend(self.test_objects)
-
         self.assertEqual(self.test_layer, new_layer)
+
+        new_layer.remove(self.test_object)
+        self.assertNotEqual(self.test_layer, new_layer)
+
+        self.assertNotEqual(self.test_layer, self.test_object)
 
     def test_copy(self):
         self.test_layer.extend(self.test_objects)
@@ -114,12 +118,20 @@ class SceneTest(TestCaseWithPatch):
         self.test_scene.remove(self.test_layer)
         self.assertNotIn(self.test_layer, self.test_scene)
 
+    def test_remove_layer_by_name(self):
+        self.test_scene.add(self.test_layer)
+        self.test_scene.remove(self.test_layer.name)
+        self.assertNotIn(self.test_layer, self.test_scene)
+
     def test_get_layer(self):
         self.test_scene.add(self.test_layer)
 
         name = self.test_layer.name
         self.assertIs(self.test_layer, self.test_scene[name])
         self.assertIs(self.test_layer, getattr(self.test_scene, name))
+
+        self.assertRaises(AttributeError, getattr, self.test_scene,
+                          'definitely not a layer in test scene')
 
     def test_extend(self):
         self.test_scene.extend(self.test_layers)

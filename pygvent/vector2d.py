@@ -119,7 +119,7 @@ class Vector2D(object):
     def __ne__(self, other):
         return not self == other
 
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.x or self.y)
 
     def copy(self):

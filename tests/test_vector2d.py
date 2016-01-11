@@ -7,7 +7,7 @@ class Vector2DTest(unittest.TestCase):
     def setUp(self):
         self.vector = Vector2D(111., 222.)
 
-    def test_access(self):
+    def test_get(self):
         self.assertTrue(self.vector.x == 111 and self.vector.y == 222)
         self.assertTrue(self.vector[0] == 111 and self.vector[1] == 222)
 
@@ -18,11 +18,23 @@ class Vector2DTest(unittest.TestCase):
         self.vector.x = 333
         self.assertTrue(self.vector.x == 333 and self.vector[0] == 333)
 
+        self.vector[0] = 222
+        self.assertTrue(self.vector.x == 222 and self.vector[0] == 222)
+
+        self.vector.y = 88
+        self.assertTrue(self.vector.y == 88 and self.vector[1] == 88)
+
         self.vector[1] = 444
         self.assertTrue(self.vector.y == 444 and self.vector[1] == 444)
 
         self.assertRaises(VectorIndexError, self.vector.__setitem__,
                           key=len(self.vector) + 100, value=999)
+
+    def test_nonzero(self):
+        self.assertTrue(self.vector)
+        self.assertFalse(Vector2D.zeros())
+        self.assertTrue(Vector2D(0, 1))
+        self.assertTrue(Vector2D(1, 0))
 
     def test_equality(self):
         equals = [Vector2D(111, 222), (111, 222), [111, 222],
@@ -34,6 +46,11 @@ class Vector2DTest(unittest.TestCase):
                       Vector2D(0., 0), 5, False, [3, -2, -5], [0, 0]]
         for other in non_equals:
             self.assertNotEqual(self.vector, other)
+
+    def test_copy(self):
+        new_vector = self.vector.copy()
+        self.assertIsNot(self.vector, new_vector)
+        self.assertEqual(self.vector, new_vector)
 
     def test_left_operand_math(self):
         self.assertEqual(self.vector + 1, Vector2D(112, 223))
@@ -96,6 +113,8 @@ class Vector2DTest(unittest.TestCase):
                          (self.vector - other).length)
 
     def test_angles(self):
+        self.assertEqual(0, Vector2D.zeros().angle)
+
         self.vector = Vector2D(0, 3)
         self.assertEquals(self.vector.angle, 90)
 
@@ -117,6 +136,20 @@ class Vector2DTest(unittest.TestCase):
         self.vector.angle = 90
         self.assertEqual(self.vector.angle, 90)
         self.assertEqual(round(self.vector, 15), [0, 3])
+
+    def test_perpendicular(self):
+        perpendicular = self.vector.get_perpendicular()
+        self.assertEqual(90, self.vector.get_angle_between(perpendicular))
+        self.assertEqual(-90, perpendicular.get_angle_between(self.vector))
+
+    def test_normalize(self):
+        self.vector = Vector2D(3, 5)
+        normalized = self.vector.normalize()
+
+        length = self.vector.length
+        self.assertEqual(normalized, (3 / length, 5 / length))
+
+        self.assertEqual((0, 0), Vector2D.zeros().normalize())
 
     def test_basis_vectors(self):
         self.vector = Vector2D(10, 1)

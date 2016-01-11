@@ -22,16 +22,21 @@ class Button(VisibleGameObject):
         """
         super(Button, self).__init__(position, **kwargs)
         self.images = images
-        self.state = state
-        self.new_state = self.state
-        self.image = getattr(self.images, self.state)
+        self.new_state = state
+        self.image = getattr(self.images, self.new_state)
         self.on_press = Event()
 
+        self._state = self.new_state
+
+    @property
+    def state(self):
+        return self._state
+
     def update(self):
-        if self._is_enabled and self.new_state is not self.state:
-            self.state = self.new_state
-            self.image = getattr(self.images, self.state)
-            if self.state is Button.State.PRESSED:
+        if self._is_enabled and self.new_state is not self._state:
+            self._state = self.new_state
+            self.image = getattr(self.images, self._state)
+            if self._state is Button.State.PRESSED:
                 self.on_press()
 
 
@@ -57,8 +62,7 @@ class TopDownMenu(VisibleGameObject):
         self._buttons.append(button)
 
     def remove_button(self, button):
-        if button in self._buttons:
-            self._buttons.remove(button)
+        self._buttons.remove(button)
 
     def draw(self, screen):
         if self._is_visible:
@@ -75,13 +79,14 @@ class TopDownMenu(VisibleGameObject):
             button.update()
 
     def move_up(self):
-        self._buttons[self.index].new_state = Button.State.DESELECTED
-        self.index -= 1
-        self._buttons[self.index].new_state = Button.State.SELECTED
+        self.move_cursor(-1)
 
     def move_down(self):
+        self.move_cursor(1)
+
+    def move_cursor(self, offset):
         self._buttons[self.index].new_state = Button.State.DESELECTED
-        self.index += 1
+        self._index += offset
         self._buttons[self.index].new_state = Button.State.SELECTED
 
     def select(self):

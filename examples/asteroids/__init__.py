@@ -5,7 +5,7 @@ from random import random
 from pygvent.display import Resolution
 from pygvent.game import Game
 from pygvent.controls import Button, TopDownMenu
-from pygvent.objects import Layer, Scene
+from pygvent.structures import Layer, Scene
 from examples.asteroids.asteroid import Asteroid
 from examples.asteroids.player import Player
 from examples.asteroids.score import Score
@@ -16,7 +16,7 @@ class AsteroidsGame(Game):
     BASE_ASTEROID_POSSIBILITY = 0.01
 
     def __init__(self, *args, **kwargs):
-        super(AsteroidsGame, self).__init__('AsteroidsGame', *args, **kwargs)
+        super(AsteroidsGame, self).__init__('Asteroids', *args, **kwargs)
         self.asteroid_possibility = None
         self.max_asteroids = None
 

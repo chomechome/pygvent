@@ -1,6 +1,5 @@
 # coding=utf-8
 from collections import namedtuple
-
 from pygvent.objects import VisibleGameObject
 from pygvent.utils.image import convert_to_mask
 

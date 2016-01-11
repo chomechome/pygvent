@@ -1,6 +1,5 @@
 # coding=utf-8
 from collections import namedtuple
-
 from examples.asteroids.projectile import Projectile
 from pygvent.objects import VisibleGameObject
 from pygvent.utils.image import convert_to_mask
@@ -48,9 +47,9 @@ class Player(VisibleGameObject):
 
     def can_move(self, screen):
         width, _ = screen.get_size()
-        return (0 <= (self._position + self._direction).x <=
-                width - self.rect.width
-                and not self._is_destroyed)
+        max_width = width - self.rect.width
+        return (0 <= (self._position + self._direction).x <= max_width and
+                not self._is_destroyed)
 
     def move_left(self):
         self._direction += self._left_move
@@ -59,6 +58,7 @@ class Player(VisibleGameObject):
         self._direction += self._right_move
 
     def shoot(self, projectiles, image):
-        offset = (self.rect.width // 2 - 4, -6)
-        projectile = Projectile(self.position + offset, image)
-        projectiles.add(projectile)
+        if not self._is_destroyed:
+            offset = (self.rect.width // 2 - 4, -6)
+            projectile = Projectile(self.position + offset, image)
+            projectiles.add(projectile)

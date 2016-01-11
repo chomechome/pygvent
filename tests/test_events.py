@@ -1,5 +1,6 @@
 # coding=utf-8
 from functools import partial
+
 from pygvent.events import Event, Handler
 from tests.mocks import TestCaseWithPatch
 

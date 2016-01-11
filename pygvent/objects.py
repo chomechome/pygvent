@@ -1,111 +1,6 @@
 from abc import ABCMeta, abstractmethod
-from collections import OrderedDict
 from pygvent.events import Event
 from pygvent.vector2d import Vector2D
-
-
-class Layer(object):
-    def __init__(self, name, objects=None):
-        self.name = name
-
-        self._objects = set()
-
-        for obj in objects or []:
-            self.add(obj)
-
-    def __iter__(self):
-        return iter(self._objects.copy())
-
-    def __contains__(self, item):
-        return item in self._objects
-
-    def __len__(self):
-        return len(self._objects)
-
-    def add(self, obj):
-        obj.layers.add(self)
-        self._objects.add(obj)
-
-    def remove(self, obj):
-        if self in obj.layers:
-            obj.layers.remove(self)
-        if obj in self:
-            self._objects.remove(obj)
-
-    def extend(self, iterable):
-        self._objects.update(iterable)
-
-    def clear(self):
-        for obj in self:
-            self.remove(obj)
-
-    def copy(self):
-        return Layer(self._objects)
-
-    def update(self):
-        for obj in self:
-            obj.update()
-
-    def draw(self, screen):
-        for obj in self:
-            obj.draw(screen)
-
-
-class Scene(object):
-    def __init__(self, layers=None):
-        self._layers = OrderedDict()
-
-        for layer in layers or []:
-            self.add(layer)
-
-    def __len__(self):
-        return len(self._layers)
-
-    def __iter__(self):
-        return iter(self.layers)
-
-    # TODO: this is a hack for already deleted layers, might not be good
-    def __getitem__(self, item):
-        return self._layers.get(item, [])
-
-    def __getattr__(self, item):
-        if item in self._layers:
-            return self[item]
-        raise AttributeError("'Scene' object has no attribute {}".format(item))
-
-    @property
-    def layers(self):
-        return list(self._layers.values())
-
-    @property
-    def layer_names(self):
-        return list(self._layers.keys())
-
-    @property
-    def object_count(self):
-        return sum(map(len, self))
-
-    def add(self, layer):
-        self._layers[layer.name] = layer
-
-    def remove(self, layer):
-        if isinstance(layer, str):
-            self._layers.pop(layer)
-        else:
-            self._layers.pop(layer.name)
-
-    def clear(self):
-        for layer in self:
-            layer.clear()
-        self._layers.clear()
-
-    def update(self):
-        for layer in self:
-            layer.update()
-
-    def draw(self, screen):
-        for layer in self:
-            layer.draw(screen)
 
 
 # TODO: add frame to scene and objects for time control?
@@ -115,7 +10,7 @@ class GameObject(object):
     def __init__(self, layers=None, is_enabled=True):
         """
 
-        :type layers: list[Layer]
+        :type layers: list[pygvent.structures.Layer]
         :type is_enabled: bool
         """
         self.on_kill = Event()
@@ -146,7 +41,6 @@ class GameObject(object):
 
     def kill(self):
         self.clear_layers()
-
         self.on_kill()
 
     def disable(self):
@@ -170,7 +64,7 @@ class VisibleGameObject(GameObject):
         :param image: An image to use as object visualization
         :param image_mask: Defines which pixels of image to use when object
         is checked for intersection
-        :type position: core.vector2d.Vector2D|list|tuple
+        :type position: pygvent.vector2d.Vector2D|list|tuple
         :type is_visible: bool
         :type is_static: bool
         """

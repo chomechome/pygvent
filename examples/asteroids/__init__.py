@@ -85,7 +85,7 @@ class AsteroidsGame(Game):
             'resource/{}_button_select.png'.format(button_name))
         press = self.engine.image(
             'resource/{}_button_press.png'.format(button_name))
-        button_images = Button.Images(idle, select, press, idle)
+        button_images = Button.Images(idle, select, press)
         return Button(menu.position + offset, button_images)
 
     def load_game_level(self, scene):
@@ -99,6 +99,8 @@ class AsteroidsGame(Game):
         projectiles = Layer('Projectiles')
         scene.add(projectiles)
 
+        self.keyboard.keys.K_LEFT.on_down += player.move_left
+        self.keyboard.keys.K_RIGHT.on_down += player.move_right
         self.keyboard.keys.K_SPACE.on_press += partial(
             player.shoot, projectiles, projectile_image)
 
@@ -118,18 +120,18 @@ class AsteroidsGame(Game):
 
         score = self.create_score(score_layer)
 
+        self.clock.on_tick.extend(
+            [partial(self.create_random_asteroid, asteroids, asteroid_images),
+             partial(self.handle_collisions, player, score, scene)]
+        )
+
         player.on_kill.extend(
             [partial(self.clock.on_tick.remove, self.create_random_asteroid),
-             partial(self.clock.on_tick.remove, self.handle_intersections),
+             partial(self.clock.on_tick.remove, self.handle_collisions),
              self.clear_input_bindings,
              partial(self.engine.time.wait, 1000),
              scene.clear,
              partial(self.load_main_menu, scene)]
-        )
-
-        self.clock.on_tick.extend(
-            [partial(self.create_random_asteroid, asteroids, asteroid_images),
-             partial(self.handle_intersections, player, score, scene)]
         )
 
     def create_score(self, layer):
@@ -153,9 +155,6 @@ class AsteroidsGame(Game):
                         player_images)
         layer.add(player)
 
-        self.keyboard.keys.K_LEFT.on_down += player.move_left
-        self.keyboard.keys.K_RIGHT.on_down += player.move_right
-
         return player
 
     def create_random_asteroid(self, asteroids, images):
@@ -173,18 +172,19 @@ class AsteroidsGame(Game):
             else:
                 self.asteroid_possibility += 0.0001
 
-    def handle_intersections(self, player, score, scene):
-        for asteroid in scene['Asteroids']:
-            if self.engine.sprite.collide_mask(player, asteroid):
-                asteroid.state = Asteroid.State.DESTROYED
-                player.state = Player.State.DESTROYED
-                break
-            for projectile in scene['Projectiles']:
-                if self.engine.sprite.collide_mask(asteroid, projectile):
+    def handle_collisions(self, player, score, scene):
+        if player.state is not Player.State.DESTROYED:
+            for asteroid in scene['Asteroids']:
+                if self.engine.sprite.collide_mask(player, asteroid):
                     asteroid.state = Asteroid.State.DESTROYED
-                    projectile.kill()
-                    score.increase(1)
+                    player.state = Player.State.DESTROYED
                     break
+                for projectile in scene['Projectiles']:
+                    if self.engine.sprite.collide_mask(asteroid, projectile):
+                        asteroid.state = Asteroid.State.DESTROYED
+                        projectile.kill()
+                        score.increase(1)
+                        break
 
 
 def main():

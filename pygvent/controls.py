@@ -9,10 +9,9 @@ class Button(VisibleGameObject):
         IDLE = 'idle'
         SELECTED = 'selected'
         PRESSED = 'pressed'
-        DESELECTED = 'deselected'
 
     Images = namedtuple('ButtonImages', [State.IDLE, State.SELECTED,
-                                         State.PRESSED, State.DESELECTED])
+                                         State.PRESSED])
 
     def __init__(self, position, images, state=State.IDLE, **kwargs):
         """
@@ -85,7 +84,7 @@ class TopDownMenu(VisibleGameObject):
         self.move_cursor(1)
 
     def move_cursor(self, offset):
-        self._buttons[self.index].new_state = Button.State.DESELECTED
+        self._buttons[self.index].new_state = Button.State.IDLE
         self._index += offset
         self._buttons[self.index].new_state = Button.State.SELECTED
 

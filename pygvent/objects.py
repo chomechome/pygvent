@@ -25,11 +25,23 @@ class GameObject(object):
     def layers(self):
         return self._layers
 
+    @property
+    def is_enabled(self):
+        return self._is_enabled
+
     def add_to_layer(self, layer):
+        """
+
+        :type layer: pygvent.structures.Layer
+        """
         layer.add(self)
         self._layers.add(layer)
 
     def remove_from_layer(self, layer):
+        """
+
+        :type layer: pygvent.structures.Layer
+        """
         if self in layer:
             layer.remove(self)
         if layer in self._layers:
@@ -58,7 +70,7 @@ class VisibleGameObject(GameObject):
     __metaclass__ = ABCMeta
 
     def __init__(self, position, image=None, image_mask=None, layers=None,
-                 is_enabled=True, is_visible=True, is_static=False):
+                 is_enabled=True, is_visible=True):
         """
 
         :param image: An image to use as object visualization
@@ -66,14 +78,12 @@ class VisibleGameObject(GameObject):
         is checked for intersection
         :type position: pygvent.vector2d.Vector2D|list|tuple
         :type is_visible: bool
-        :type is_static: bool
         """
         super(VisibleGameObject, self).__init__(layers, is_enabled)
         self.image = image
         self.mask = image_mask
 
         self._is_visible = is_visible
-        self._is_static = is_static
         self._position = Vector2D.convert(position)
 
     @property
@@ -87,6 +97,10 @@ class VisibleGameObject(GameObject):
         bounding_box.y = self._position.y
         return bounding_box
 
+    @property
+    def is_visible(self):
+        return self._is_visible
+
     def hide(self):
         self._is_visible = False
 
@@ -94,8 +108,7 @@ class VisibleGameObject(GameObject):
         self._is_visible = True
 
     def move(self, offset):
-        if not self._is_static:
-            self._position += offset
+        self._position += offset
 
     def draw(self, screen):
         if self._is_visible and self.image is not None:

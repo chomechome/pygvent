@@ -38,6 +38,27 @@ class EventsTest(TestCaseWithPatch):
         self.event -= self.another_function
         self.assertEqual(0, len(self.event.handlers))
 
+    def test_extend(self):
+        handlers = [self.some_function, self.another_function,
+                    partial(self.some_function, 213),
+                    Handler(self.another_function, 'rumba')]
+        self.event.extend(handlers)
+
+        self.assertEqual(len(handlers), len(self.event.handlers))
+        for handler in handlers:
+            self.assertIn(handler, self.event.handlers)
+
+    def test_remove_many(self):
+        handlers = [self.another_function, self.some_function,
+                    partial(max, [3, 4]), Handler(max, 'rumba')]
+        self.event.extend(handlers)
+
+        self.event.remove_many(
+            [self.some_function, self.another_function, max])
+        self.assertEqual(0, len(self.event.handlers))
+        for handler in handlers:
+            self.assertNotIn(handler, self.event.handlers)
+
     def test_clear(self):
         self.event += self.some_function
         self.event += Handler(self.some_function, 1, 2)

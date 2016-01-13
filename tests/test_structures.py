@@ -1,12 +1,13 @@
 # coding=utf-8
 from pygvent.structures import Layer, Scene
-from tests.mocks import MockGameObject, TestCaseWithPatch, \
-    MockVisibleGameObject
+from tests.mocks import MockGameObject, MockVisibleGameObject, \
+    TestCaseWithPatch
 
 
 class LayerTest(TestCaseWithPatch):
     def setUp(self):
-        self.test_layer = Layer('TestLayer')
+        self.test_layers = [Layer('TestLayer{}'.format(i)) for i in range(10)]
+        self.test_layer = self.test_layers[0]
         self.test_objects = [MockGameObject() for _ in range(10)]
         self.test_object = self.test_objects[0]
 
@@ -33,6 +34,22 @@ class LayerTest(TestCaseWithPatch):
 
         self.assertNotIn(self.test_layer, self.test_object.layers)
         self.assertNotIn(self.test_object, self.test_layer)
+
+    def test_create_object_with_layers(self):
+        new_object = MockGameObject(self.test_layers)
+
+        for layer in self.test_layers:
+            self.assertIn(layer, new_object.layers)
+            self.assertIn(new_object, layer)
+
+    def test_clear_object_layers(self):
+        for layer in self.test_layers:
+            layer.add(self.test_object)
+
+        self.test_object.clear_layers()
+        for layer in self.test_layers:
+            self.assertNotIn(layer, self.test_object.layers)
+            self.assertNotIn(self.test_object, layer)
 
     def test_extend_layer(self):
         self.test_layer.extend(self.test_objects)

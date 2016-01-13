@@ -31,5 +31,16 @@ class MockVisibleGameObject(VisibleGameObject):
     def update(self):
         pass
 
-    def draw(self, screen):
-        pass
+
+class MockImage(object):
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+    def get_rect(self):
+        return self
+
+    def get_size(self):
+        return self.width, self.height

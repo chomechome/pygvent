@@ -1,19 +1,33 @@
-# coding=utf-8
-from pygvent.objects import VisibleGameObject
+from broadway.actor import Label
+from broadway.alignment import Alignment
+from broadway.color import Color
+from broadway.font import IFont
+from broadway.geometry import Point
+from broadway.picture.text import Text
 
 
-class Score(VisibleGameObject):
-    def __init__(self, font, color, message, position, **kwargs):
-        super(Score, self).__init__(position, **kwargs)
-        self.font = font
-        self.color = color
-        self.message = message
-        self.value = 0
+class AsteroidScore(Label):
+    def __init__(self,
+                 font: IFont,
+                 position: Point,
+                 alignment: Alignment = Alignment.TOPLEFT,
+                 ):
+        self._score = 0
 
-    def update(self):
-        if self._is_enabled:
-            message = '{}: {}'.format(self.message, self.value)
-            self.image = self.font.render(message, 0, self.color)
+        super().__init__(
+            image=Text(
+                font,
+                text=self._get_text(),
+                size=20,
+                color=Color.WHITE,
+            ),
+            position=position,
+            alignment=alignment,
+        )
 
-    def increase(self, value):
-        self.value += value
+    def increase(self, value: int):
+        self._score += value
+        self.image.text = self._get_text()
+
+    def _get_text(self) -> str:
+        return 'Score: {}'.format(self._score)

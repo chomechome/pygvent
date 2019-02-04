@@ -1,49 +1,51 @@
-from unittest import TestCase
-from pygvent.keyboard import Keyboard, KeyboardState
+import unittest
+
+from broadway.input.keys import Key, Keyboard
+from tests.fakes import FakeKeyState
 
 
-class KeyboardTest(TestCase):
+class KeyboardTest(unittest.TestCase):
     def setUp(self):
-        self.test_state = [False for _ in range(6)]
-        self.keyboard = Keyboard(self.get_mock_state(self.test_state))
+        self.key = Key.ZERO
+        self.previous = FakeKeyState()
+        self.current = FakeKeyState()
+        self.keyboard = Keyboard(previous=self.previous, current=self.current)
 
-    def get_mock_state(self, iterable):
-        class MockKeyboardState(KeyboardState):
-            def get_new_state(self):
-                return iterable
+    def press(self):
+        self.current.mapping[self.key] = True
 
-        return MockKeyboardState()
+    def release(self):
+        self.previous.mapping[self.key] = True
+
+    def test_is_up(self):
+        self.assertTrue(self.keyboard.is_up(self.key))
+        self.press()
+        self.assertFalse(self.keyboard.is_up(self.key))
 
     def test_is_down(self):
-        key_id = 1
-        self.assertFalse(self.keyboard.old_state.is_down(key_id))
-        self.assertFalse(self.keyboard.new_state.is_down(key_id))
-
-        self.test_state[key_id] = True
-        self.keyboard.update()
-
-        self.assertFalse(self.keyboard.old_state.is_down(key_id))
-        self.assertTrue(self.keyboard.new_state.is_down(key_id))
+        self.assertFalse(self.keyboard.is_down(self.key))
+        self.press()
+        self.assertTrue(self.keyboard.is_down(self.key))
 
     def test_is_pressed(self):
-        key_id = 2
-        self.assertFalse(self.keyboard.is_pressed(key_id))
+        self.assertFalse(self.keyboard.is_pressed(self.key))
+        self.press()
+        self.assertTrue(self.keyboard.is_pressed(self.key))
 
-        self.test_state[key_id] = True
-        self.keyboard.update()
-
-        self.assertTrue(self.keyboard.is_pressed(key_id))
+    def test_is_any_pressed(self):
+        self.assertFalse(self.keyboard.is_any_pressed())
+        self.press()
+        self.assertTrue(self.keyboard.is_any_pressed())
 
     def test_is_released(self):
-        key_id = 5
-        self.assertFalse(self.keyboard.is_released(key_id))
+        self.assertFalse(self.keyboard.is_released(self.key))
+        self.release()
+        self.assertTrue(self.keyboard.is_released(self.key))
 
-        self.test_state[key_id] = True
+    def test_update(self):
         self.keyboard.update()
 
-        self.assertFalse(self.keyboard.is_released(key_id))
-
-        self.test_state[key_id] = False
-        self.keyboard.update()
-
-        self.assertTrue(self.keyboard.is_released(key_id))
+        self.assertIs(self.previous, self.keyboard._current)
+        self.assertIs(self.current, self.keyboard._previous)
+        self.previous.update.assert_called_once()
+        self.current.update.assert_not_called()

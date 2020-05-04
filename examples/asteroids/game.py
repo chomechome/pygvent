@@ -1,7 +1,7 @@
-from broadway.game import Game
-from broadway.geometry import Point, Rectangle
-from broadway.resolution import Resolution
-from broadway.structure import Scene
+from pygvent.game import Game
+from pygvent.geometry import Point, Rectangle
+from pygvent.resolution import Resolution
+from pygvent.structure import Scene
 
 from asteroids import AsteroidField
 from background import Background

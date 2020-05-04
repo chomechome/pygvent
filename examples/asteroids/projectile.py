@@ -1,5 +1,5 @@
-from broadway.actor import Actor
-from broadway.geometry import Vector
+from pygvent.actor import Actor
+from pygvent.geometry import Vector
 
 
 class Projectile(Actor):

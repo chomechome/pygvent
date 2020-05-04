@@ -1,6 +1,6 @@
 import unittest
 
-from broadway.input.keys import Key, Keyboard
+from pygvent.input.keys import Key, Keyboard
 from tests.fakes import FakeKeyState
 
 

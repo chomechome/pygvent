@@ -1,7 +1,7 @@
 import math
 import unittest
 
-from broadway.geometry import Vector, Point
+from pygvent.geometry import Vector, Point
 
 
 class VectorTest(unittest.TestCase):

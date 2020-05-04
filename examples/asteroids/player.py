@@ -1,7 +1,7 @@
-from broadway.actor import Actor
-from broadway.geometry import Vector
-from broadway.input.keys import Key, Keyboard
-from broadway.types import Seconds
+from pygvent.actor import Actor
+from pygvent.geometry import Vector
+from pygvent.input.keys import Key, Keyboard
+from pygvent.types import Seconds
 
 
 class Player(Actor):

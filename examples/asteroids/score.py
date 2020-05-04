@@ -1,9 +1,9 @@
-from broadway.actor import Label
-from broadway.alignment import Alignment
-from broadway.color import Color
-from broadway.font import IFont
-from broadway.geometry import Point
-from broadway.picture.text import Text
+from pygvent.actor import Label
+from pygvent.alignment import Alignment
+from pygvent.color import Color
+from pygvent.font import IFont
+from pygvent.geometry import Point
+from pygvent.picture.text import Text
 
 
 class AsteroidScore(Label):

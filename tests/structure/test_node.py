@@ -1,7 +1,7 @@
 import unittest
 
-from broadway.structure import Node
-from broadway.utils.reference import WeakReference
+from pygvent.structure import Node
+from pygvent.utils.reference import WeakReference
 
 
 class NodeTest(unittest.TestCase):

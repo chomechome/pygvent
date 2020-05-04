@@ -2,7 +2,7 @@
 from functools import partial
 from unittest import TestCase
 from unittest.mock import Mock
-from broadway.event import Event, Handler
+from pygvent.event import Event, Handler
 
 
 class CommandTest(TestCase):

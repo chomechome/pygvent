@@ -1,6 +1,6 @@
 import unittest
 
-from broadway.action.loop import Loop
+from pygvent.action.loop import Loop
 from tests.fakes import FakeInstantAction, FakeIntervalAction
 
 

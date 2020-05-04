@@ -1,6 +1,6 @@
 import unittest
 
-from broadway.action.chain import Chain
+from pygvent.action.chain import Chain
 from tests.fakes import FakeInstantAction, FakeIntervalAction
 
 
@@ -8,7 +8,8 @@ class ChainTest(unittest.TestCase):
     def test_forward_time_in_update_to_interval_action(self):
         action = FakeIntervalAction(duration=2)
         chain = Chain(action)
-        elapsed = action._duration / 2
+
+        elapsed = 1
 
         overtime = chain.update(elapsed)
 

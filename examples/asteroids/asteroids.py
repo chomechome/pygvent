@@ -1,11 +1,11 @@
 import random
 from typing import List
 
-from broadway.actor import Actor
-from broadway.geometry import Point, Vector, Rectangle
-from broadway.structure import Node
-from broadway.picture import IPicture
-from broadway.types import Seconds
+from pygvent.actor import Actor
+from pygvent.geometry import Point, Vector, Rectangle
+from pygvent.structure import Node
+from pygvent.picture import IPicture
+from pygvent.types import Seconds
 
 
 class Asteroid(Actor):

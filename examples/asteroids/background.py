@@ -1,6 +1,6 @@
-from broadway.geometry import Point
-from broadway.structure import Node
-from broadway.picture import IPicture
+from pygvent.geometry import Point
+from pygvent.structure import Node
+from pygvent.picture import IPicture
 
 
 class Background(Node):

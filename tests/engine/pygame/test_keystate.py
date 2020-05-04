@@ -1,5 +1,5 @@
-from broadway.engine.pygame import PygameKeyState
-from broadway.input.keys import Key
+from pygvent.engine.pygame import PygameKeyState
+from pygvent.input.keys import Key
 from tests.engine.pygame.case import PygameTestCase
 
 

@@ -1,6 +1,6 @@
 import unittest
 
-from broadway.geometry import Point, Vector, Line
+from pygvent.geometry import Point, Vector, Line
 
 
 class LineTest(unittest.TestCase):

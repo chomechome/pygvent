@@ -1,10 +1,10 @@
-from broadway.actor import Label
-from broadway.alignment import Alignment
-from broadway.color import Color
-from broadway.game import Game
-from broadway.geometry import Point
-from broadway.picture import Text
-from broadway.structure import Scene
+from pygvent.actor import Label
+from pygvent.alignment import Alignment
+from pygvent.color import Color
+from pygvent.game import Game
+from pygvent.geometry import Point
+from pygvent.picture import Text
+from pygvent.structure import Scene
 
 
 class HelloWorld(Game):

@@ -1,7 +1,7 @@
 import pyglet
 
-from broadway.engine.pyglet.keystate import PygletKeyState
-from broadway.input.keys import Key
+from pygvent.engine.pyglet.keystate import PygletKeyState
+from pygvent.input.keys import Key
 from tests.engine.pyglet.case import PygletTestCase
 
 

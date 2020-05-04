@@ -1,11 +1,11 @@
 import unittest.mock
 
-from broadway.action.instant.abstract import InstantAction
-from broadway.action.interval.abstract import IntervalAction
-from broadway.actor import Actor
-from broadway.geometry import Point
-from broadway.input.keys import Key, IKeyState
-from broadway.types import Seconds
+from pygvent.action.instant.abstract import InstantAction
+from pygvent.action.interval.abstract import IntervalAction
+from pygvent.actor import Actor
+from pygvent.geometry import Point
+from pygvent.input.keys import Key, IKeyState
+from pygvent.types import Seconds
 
 
 class FakeActor(Actor):

@@ -1,6 +1,6 @@
 import unittest
 
-from broadway.geometry import Point, Rectangle
+from pygvent.geometry import Point, Rectangle
 
 
 class RectangleTest(unittest.TestCase):
